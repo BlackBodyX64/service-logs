@@ -82,3 +82,13 @@ export const syncUpdateLog = async (req: Request, res: Response) => {
 
     return res.json(response)
 }
+
+export const getImg = async (req: Request, res: Response) => {
+    const response: BodyResponse = {
+        status: ResponseStatus.OK
+    }
+
+    const resp = await deviceUtils.getImage()
+
+    return res.json(resp)
+}

@@ -9,4 +9,6 @@ const router = Router()
 
 router.post('/sync-log', LogController.syncUpdateLog)
 
+router.get('/get-img', LogController.getImg)
+
 export default router

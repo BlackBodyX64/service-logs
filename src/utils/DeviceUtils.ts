@@ -25,7 +25,7 @@ const challenge = (method: string, url: string, data: any = null) => new Promise
     })
 })
 
-const HikIsApiRequest = async (method: string, base: string, uri: string, username: string, password: string, data: any = null) => {
+const HikIsApiRequest = async (method: string, base: string, uri: string, username: string, password: string, data: any = null, responseType: any = null) => {
     const url = `${base}${uri}`
     const authDetails: any = await challenge(method, url, data)
     const qop = authDetails[0][1].replace(/"/g, '')
@@ -40,7 +40,7 @@ const HikIsApiRequest = async (method: string, base: string, uri: string, userna
         `nonce="${nonce}", uri="${uri}", response="${response}", ` +
         `qop="${qop}", nc=${nonceCount}, cnonce="${cNonce}"`
 
-    return axios({ method, url, data, headers: { Authorization: authorization }, timeout: 10000 })
+    return axios({ method, url, data, headers: { Authorization: authorization }, timeout: 10000 , responseType: responseType ?? 'json'})
 }
 
 const getDeviceLog = async (device: any, startDate: string, endDate: string, offset: number = 0) => {
@@ -224,7 +224,17 @@ const getListUpdatePunchLog = async (devices: any) => {
     return transFromData(devices, data)
 }
 
+const getImage = async () => {
+
+    const response = await HikIsApiRequest('get', 'http://192.168.0.44', '/LOCALS/pic/acsLinkCap/202407_00/01_110855_30075_0.jpeg@WEB000000001986', 'admin', 'Admin@123', null, 'arraybuffer')
+
+    let base64Image = `data:${response.headers['content-type']};base64,` + Buffer.from(response.data).toString('base64');
+
+    return base64Image
+}
+
 export default {
     getListUpdatePunchLog,
-    setPunchLogDefault
+    setPunchLogDefault,
+    getImage
 }
