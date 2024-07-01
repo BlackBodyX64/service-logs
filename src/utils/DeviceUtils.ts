@@ -15,7 +15,7 @@ const challenge = (method: string, url: string, data: any = null) => new Promise
         if (error && error.response && error.response.status === 401) {
             const authDetails = error.response.headers['www-authenticate'].split(', ').map((v: any) => {
                 const splitIndex = v.indexOf('=')
-                return [ v.substring(0, splitIndex), v.substring(splitIndex + 1, v.length) ]
+                return [v.substring(0, splitIndex), v.substring(splitIndex + 1, v.length)]
             })
 
             resolve(authDetails)
@@ -31,7 +31,7 @@ const HikIsApiRequest = async (method: string, base: string, uri: string, userna
     const qop = authDetails[0][1].replace(/"/g, '')
     const realm = authDetails[1][1].replace(/"/g, '')
     const nonce = authDetails[2][1].replace(/"/g, '')
-    const nonceCount = '00000002'
+    const nonceCount = '00000001'
     const cNonce = CryptoJS.lib.WordArray.random(8)
     const HA1 = CryptoJS.MD5(`${username}:${realm}:${password}`).toString()
     const HA2 = CryptoJS.MD5(`${method}:${uri}`).toString()
@@ -40,7 +40,27 @@ const HikIsApiRequest = async (method: string, base: string, uri: string, userna
         `nonce="${nonce}", uri="${uri}", response="${response}", ` +
         `qop="${qop}", nc=${nonceCount}, cnonce="${cNonce}"`
 
-    return axios({ method, url, data, headers: { Authorization: authorization }, timeout: 10000})
+    return axios({ method, url, data, headers: { Authorization: authorization }, timeout: 10000 })
+}
+
+const HikIsImageRequest = async (method: string, base: string, uri: string, username: string, password: string, data: any = null) => {
+    const url = `${base}${uri}`
+    const authDetails: any = await challenge(method, url, data)
+    const qop = authDetails[0][1].replace(/"/g, '')
+    const realm = authDetails[1][1].replace(/"/g, '')
+    const nonce = authDetails[2][1].replace(/"/g, '')
+    const nonceCount = '00000001'
+    const cNonce = CryptoJS.lib.WordArray.random(8)
+    const HA1 = CryptoJS.MD5(`${username}:${realm}:${password}`).toString()
+    const HA2 = CryptoJS.MD5(`${method}:${uri}`).toString()
+    const response = CryptoJS.MD5(`${HA1}:${nonce}:${nonceCount}:${cNonce}:${qop}:${HA2}`).toString()
+    const authorization = `Digest username="${username}", realm="${realm}", ` +
+        `nonce="${nonce}", uri="${uri}", response="${response}", ` +
+        `qop="${qop}", nc=${nonceCount}, cnonce="${cNonce}"`
+
+    const accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
+
+    return axios({ method, url, data, headers: { Authorization: authorization, Accept: accept }, timeout: 10000, responseType: 'arraybuffer' })
 }
 
 const getDeviceLog = async (device: any, startDate: string, endDate: string, offset: number = 0) => {
@@ -106,7 +126,7 @@ const transFromData = (devices: any, logDevices: any) => {
 
     for (const device of devices) {
         const logList = logDevices[device.serialNumber]
-        const status = (logList.length === 1 && logList[0] === 'failed')? LogStatus.FAILED: LogStatus.SUCCESS
+        const status = (logList.length === 1 && logList[0] === 'failed') ? LogStatus.FAILED : LogStatus.SUCCESS
 
         let startDate = device.startDate
 
@@ -155,7 +175,7 @@ const validateNewDate = (date: Date) => {
     return isNewDate
 }
 
-const setPunchLogDefault = (location:string, statusLog: any = null, logList: any) => {
+const setPunchLogDefault = (location: string, statusLog: any = null, logList: any) => {
     const updatePunchLog: PunchLog[] = []
     for (const log of logList) {
         let temp = 0
@@ -214,7 +234,7 @@ const getListUpdatePunchLog = async (devices: any) => {
             }
         }
 
-        data[sn] = <any[]> Object.values(sortedList).reduce((acc: any, v) => {
+        data[sn] = <any[]>Object.values(sortedList).reduce((acc: any, v) => {
             return acc.concat(v)
         }, [])
 
@@ -226,7 +246,7 @@ const getListUpdatePunchLog = async (devices: any) => {
 
 const getImage = async () => {
 
-    const response = await HikIsApiRequest('get', 'http://192.168.0.44', '/LOCALS/pic/acsLinkCap/202407_00/01_110855_30075_0.jpeg@WEB000000001986', 'admin', 'Admin@123', null)
+    const response = await HikIsImageRequest('GET', 'http://192.168.0.44', '/LOCALS/pic/acsLinkCap/202407_00/01_110855_30075_0.jpeg@WEB000000001986', 'admin', 'Admin@123', null)
 
     let base64Image = `data:${response.headers['content-type']};base64,` + Buffer.from(response.data).toString('base64');
 
