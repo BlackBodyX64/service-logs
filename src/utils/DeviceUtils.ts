@@ -173,7 +173,7 @@ const setPunchLogDefault = (location:string, statusLog: any = null, logList: any
         punchLog.time = time
         punchLog.temp = `${temp}`
         punchLog.location = location
-        punchLog.pictureURL = log.pictureURL
+        punchLog.pic = log.pictureURL
         updatePunchLog.push(punchLog)
     }
 
