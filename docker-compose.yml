@@ -1,0 +1,28 @@
+version: '3'
+
+services:
+  logsdb:
+    image: postgres
+    container_name: servicelogdb
+    environment:
+      POSTGRES_USER: ${DB_USERNAME}
+      POSTGRES_PASSWORD: ${DB_PASSWORD}
+      POSTGRES_DB: ${DB_DATABASE}
+      TZ: "Asia/Bangkok"
+    ports:
+      - "${DB_PORT}:5432"
+    volumes:
+      - my-db:/var/lib/postgresql/data
+
+  logservice:
+    build: ./
+    container_name: servicelog
+    env_file:
+      - .env
+    ports:
+      - "30000:30000"
+    depends_on:
+      - logsdb
+
+volumes:
+  my-db:
