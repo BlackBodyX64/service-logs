@@ -1,10 +1,12 @@
 import fs from "fs"
 import { Request, Response } from "express"
-import { StatusLog } from "../entities"
+import { PunchLog, StatusLog } from "../entities"
 import { LogStatus } from "../enumerate/LogStatus"
 import deviceUtils from "../utils/DeviceUtils"
 import dateTimeUtils from "../utils/DateTimeUtils"
 import { BodyResponse, ResponseStatus } from "../interface"
+import { IsNull } from "typeorm"
+import klockService, { KlockAlarm } from "../utils/KlockService"
 
 export const updateLog = async (startStr: string | null = null, endStr: string | null = null) => {
     console.log('LogController.updateLog - entering function')
@@ -83,12 +85,46 @@ export const syncUpdateLog = async (req: Request, res: Response) => {
     return res.json(response)
 }
 
-export const getImg = async (req: Request, res: Response) => {
-    const response: BodyResponse = {
-        status: ResponseStatus.OK
+export const autoPushToKlock = async () => {
+    console.log('Start AutoPushToKlock');
+    try {
+        const deviceList: any[] = JSON.parse(fs.readFileSync(`${process.env.FILE_DEVICE_LIST}`, 'utf-8'))
+
+        const punchLogs = await globalThis.DB.getRepository(PunchLog).find({ where: { submitted: IsNull() } })
+
+        const succ: PunchLog[] = []
+        for (const punchLog of punchLogs) {
+            const serialNumber = punchLog.location.split('|')[0]
+            const device = deviceList.find(d => d.serialNumber == serialNumber)
+            if (!device) {
+                console.log(`serialNumber: ${serialNumber} not found`);
+                continue
+            }
+
+            const imgBase64 = await deviceUtils.getImage(punchLog.pic, device)
+            if (!imgBase64) {
+                console.log('can not get image from device');
+                continue
+            }
+
+            const data: KlockAlarm = {
+                user: punchLog.employeeNo,
+                pic: imgBase64,
+                cameraName: "",
+                time: `${punchLog.date} ${punchLog.time}`,
+                temperature: punchLog.temp
+            }
+
+            const result = await klockService.pushToKlock(data)
+            if (result == 'ok') {
+                punchLog.submitted = new Date()
+                succ.push(punchLog)
+            }
+        }
+
+        await globalThis.DB.manager.save(succ)
+    } catch (error) {
+        console.log(error)
+        return
     }
-
-    const resp = await deviceUtils.getImage()
-
-    return res.json(resp)
 }

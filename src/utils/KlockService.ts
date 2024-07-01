@@ -1,14 +1,21 @@
 
 import axios from 'axios'
 
-const pushToKlock = (payload: any) => {
+export interface KlockAlarm {
+    user: string
+    pic: string
+    cameraName: string
+    time: string
+    temperature: string
+}
+
+const pushToKlock = async (payload: KlockAlarm) => {
     let data = JSON.stringify({
-        "name": "1",
-        "user": "1",
-        "snapPic": "1",
-        "time": "2024-07-01 08:00:00",
-        "temperature": "0.0",
-        "serialNumber": ""
+        "user": payload.user,
+        "pic": payload.pic,
+        "cameraName": payload.cameraName,
+        "time": payload.time,
+        "temperature": payload.temperature
     });
 
     let config = {
@@ -20,13 +27,14 @@ const pushToKlock = (payload: any) => {
         data: data
     };
 
-    axios.request(config)
-        .then((response) => {
-            console.log(JSON.stringify(response.data));
-        })
-        .catch((error) => {
-            console.log(error);
-        });
+    try {
+        const response = await axios.request(config)
+        console.log(JSON.stringify(response.data));
+        return 'ok'
+    } catch (error) {
+        console.log(error);
+        return 'error'
+    }
 }
 
 export default {

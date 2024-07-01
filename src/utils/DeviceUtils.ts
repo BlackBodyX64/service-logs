@@ -244,13 +244,24 @@ const getListUpdatePunchLog = async (devices: any) => {
     return transFromData(devices, data)
 }
 
-const getImage = async () => {
+const getImage = async (picPath: string, device: any) => {
+    const regex = /^http:\/\/([^\/]+)(\/.+)$/;
 
-    const response = await HikIsImageRequest('GET', 'http://192.168.0.44', '/LOCALS/pic/acsLinkCap/202407_00/01_110855_30075_0.jpeg@WEB000000001986', 'admin', 'Admin@123', null)
+    const match = picPath.match(regex);
+    if (match) {
+        const ip = match[1];
+        const path = match[2];
 
-    let base64Image = `data:${response.headers['content-type']};base64,` + Buffer.from(response.data).toString('base64');
+        const response = await HikIsImageRequest('GET', `http://${device.ip}`, path, device.username, device.password, null)
 
-    return base64Image
+        let base64Image = `data:${response.headers['content-type']};base64,` + Buffer.from(response.data).toString('base64');
+
+        return base64Image
+    } else {
+        return null
+    }
+
+
 }
 
 export default {
