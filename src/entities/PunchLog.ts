@@ -24,6 +24,9 @@ export default class PunchLog extends BaseEntity<PunchLog> {
     @Column({ nullable: true, default: null })
     location: string
 
+    @Column({ type: 'text', nullable: true, default: null })
+    pic: string
+
     @ManyToOne(() => StatusLog, (statusLog) => statusLog.punchLogs)
     statusLog: StatusLog
 }
