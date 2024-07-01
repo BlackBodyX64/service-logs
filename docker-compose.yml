@@ -23,8 +23,8 @@ services:
       - "30000:30000"
     depends_on:
       - logsdb
-    volumes:
-      - ./:/usr/src/app
+    # volumes:
+    #   - ./:/usr/src/app
 
 volumes:
   my-db:
