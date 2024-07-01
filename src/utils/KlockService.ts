@@ -12,10 +12,10 @@ export interface KlockAlarm {
 const pushToKlock = async (payload: KlockAlarm) => {
     let data = JSON.stringify({
         "user": payload.user,
-        "pic": payload.pic,
         "cameraName": payload.cameraName,
         "time": payload.time,
-        "temperature": payload.temperature
+        "temperature": payload.temperature,
+        "pic": payload.pic
     });
 
     let config = {

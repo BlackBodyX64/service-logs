@@ -95,13 +95,13 @@ export const autoPushToKlock = async () => {
         const succ: PunchLog[] = []
         for (const punchLog of punchLogs) {
             const serialNumber = punchLog.location.split('|')[0]
-            const device = deviceList.find(d => d.serialNumber == serialNumber)
-            if (!device) {
-                console.log(`serialNumber: ${serialNumber} not found`);
-                continue
-            }
+            // const device = deviceList.find(d => d.serialNumber == serialNumber)
+            // if (!device) {
+            //     console.log(`serialNumber: ${serialNumber} not found`);
+            //     continue
+            // }
 
-            const imgBase64 = await deviceUtils.getImage(punchLog.pic, device)
+            const imgBase64 = await deviceUtils.getImage(punchLog.pic)
             if (!imgBase64) {
                 console.log('can not get image from device');
                 continue
