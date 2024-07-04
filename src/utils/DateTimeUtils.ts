@@ -32,6 +32,8 @@ const datetimeToString = (datetime: NullableDate = null): string => {
 const convertDateTimeStr = (datetimeStr: string): any => {
     const datetime = new Date(Date.parse(datetimeStr))
 
+    datetime.setHours(datetime.getHours() + 7);
+
     return {
         date: `${datetime.getFullYear()}-${conventNumberToStr(datetime.getMonth() + 1)}-${conventNumberToStr(datetime.getDate())}`,
         time: `${conventNumberToStr(datetime.getHours())}:${conventNumberToStr(datetime.getMinutes())}:${conventNumberToStr(datetime.getSeconds())}`

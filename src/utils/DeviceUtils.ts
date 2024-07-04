@@ -183,8 +183,6 @@ const setPunchLogDefault = (location: string, statusLog: any = null, logList: an
             temp = log.currTemperature
         }
 
-        log.time.setHours(log.time.getHours() + 7)
-
         const { date, time } = DateTimeUtils.convertDateTimeStr(log.time)
         const punchLog = new PunchLog()
         if (statusLog) {
