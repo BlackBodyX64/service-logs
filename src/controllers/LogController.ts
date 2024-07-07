@@ -131,3 +131,10 @@ export const autoPushToKlock = async () => {
         return
     }
 }
+
+export const syncForce = async (req: Request, res: Response) => {
+
+    await autoPushToKlock()
+
+    return res.json({ message: 'ok' })
+}
