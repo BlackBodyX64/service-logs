@@ -42,7 +42,7 @@ const HikIsApiRequest = async (method: string, base: string, uri: string, userna
     
     console.log(url);
     console.log(authorization);
-    console.log(data);
+    console.log(JSON.stringify(data));
 
     return axios({ method, url, data, headers: { Authorization: authorization }, timeout: 10000 })
 }
@@ -91,7 +91,7 @@ const getDeviceLog = async (device: any, startDate: string, endDate: string, off
         if (offset === 0) {
             res = await HikIsApiRequest('POST', `http://${device.ip}`, uri, device.username, device.password, data)
             if (device.serialNumber === 'F25181427') {
-                console.log(JSON.stringify(res))
+                // console.log(JSON.stringify(res))
             }
 
             if (res && res.status === 200) {
