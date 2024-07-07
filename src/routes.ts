@@ -8,5 +8,6 @@ const router = Router()
 // })
 
 router.post('/sync-log', LogController.syncUpdateLog)
+router.post('/sync-force', LogController.autoPushToKlock)
 
 export default router
