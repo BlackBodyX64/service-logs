@@ -88,9 +88,13 @@ export const syncUpdateLog = async (req: Request, res: Response) => {
 export const autoPushToKlock = async () => {
     console.log('Start AutoPushToKlock');
     try {
-        const deviceList: any[] = JSON.parse(fs.readFileSync(`${process.env.FILE_DEVICE_LIST}`, 'utf-8'))
-
-        const punchLogs = await globalThis.DB.getRepository(PunchLog).find({ where: { submitted: IsNull() } })
+        const punchLogs = await globalThis.DB.getRepository(PunchLog).find({ 
+            where: { submitted: IsNull() },
+            order: {
+                date: 'ASC',
+                time: 'ASC'
+            }
+         })
 
         const succ: PunchLog[] = []
         for (let index = 0; index < punchLogs.length; index++) {
