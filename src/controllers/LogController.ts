@@ -93,8 +93,10 @@ export const autoPushToKlock = async () => {
         const punchLogs = await globalThis.DB.getRepository(PunchLog).find({ where: { submitted: IsNull() } })
 
         const succ: PunchLog[] = []
-        for (const punchLog of punchLogs) {
-            const serialNumber = punchLog.location.split('|')[0]
+        for (let index = 0; index < punchLogs.length; index++) {
+            const punchLog = punchLogs[index];
+
+            // const serialNumber = punchLog.location.split('|')[0]
             // const device = deviceList.find(d => d.serialNumber == serialNumber)
             // if (!device) {
             //     console.log(`serialNumber: ${serialNumber} not found`);
@@ -117,6 +119,7 @@ export const autoPushToKlock = async () => {
 
             const result = await klockService.pushToKlock(data)
             if (result == 'ok') {
+                console.log(index + 1);
                 punchLog.submitted = new Date()
                 succ.push(punchLog)
             }
