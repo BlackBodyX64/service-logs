@@ -16,7 +16,7 @@ export default new DataSource({
     migrations: process.env.NODE_ENV === 'production' ? ['./dist/migrations/*.js'] : ['./src/migrations/*.ts'],
     migrationsTableName: 'migrations',
     namingStrategy: new SnakeNamingStrategy(),
-    logging: true,
+    // logging: true,
     synchronize: false,
     extra: {
         decimalNumbers: true
