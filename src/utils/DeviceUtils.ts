@@ -40,10 +40,6 @@ const HikIsApiRequest = async (method: string, base: string, uri: string, userna
         `nonce="${nonce}", uri="${uri}", response="${response}", ` +
         `qop="${qop}", nc=${nonceCount}, cnonce="${cNonce}"`
     
-    console.log(url);
-    console.log(authorization);
-    console.log(JSON.stringify(data));
-
     return axios({ method, url, data, headers: { Authorization: authorization }, timeout: 10000 })
 }
 

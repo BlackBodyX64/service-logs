@@ -17,6 +17,8 @@ services:
   logservice:
     build: ./
     container_name: servicelog
+    environment:
+      - TZ: "Asia/Bangkok"
     env_file:
       - .env
     ports:
