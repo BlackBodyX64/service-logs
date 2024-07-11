@@ -117,7 +117,7 @@ export const autoPushToKlock = async (limit: number | null = null) => {
             const data: KlockAlarm = {
                 user: punchLog.employeeNo,
                 pic: imgBase64,
-                cameraName: "",
+                cameraName: punchLog.location,
                 time: `${punchLog.date} ${punchLog.time}`,
                 temperature: punchLog.temp
             }
