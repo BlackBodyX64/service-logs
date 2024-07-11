@@ -85,15 +85,16 @@ export const syncUpdateLog = async (req: Request, res: Response) => {
     return res.json(response)
 }
 
-export const autoPushToKlock = async () => {
-    console.log('Start AutoPushToKlock');
+export const autoPushToKlock = async (limit: number | null = null) => {
+    console.log('Start AutoPushToKlock Limit: ' + limit);
     try {
         const punchLogs = await globalThis.DB.getRepository(PunchLog).find({ 
             where: { submitted: IsNull() },
             order: {
                 date: 'ASC',
                 time: 'ASC'
-            }
+            },
+            ...(limit && { take: limit })
          })
 
         const succ: PunchLog[] = []
@@ -138,7 +139,9 @@ export const autoPushToKlock = async () => {
 
 export const syncForce = async (req: Request, res: Response) => {
 
-    await autoPushToKlock()
+    const { limit } = req.body
+
+    await autoPushToKlock(limit)
 
     return res.json({ message: 'ok' })
 }
