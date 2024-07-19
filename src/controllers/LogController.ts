@@ -97,7 +97,7 @@ export const autoPushToKlock = async (limit: number | null = null) => {
             ...(limit && { take: limit })
          })
 
-        const succ: PunchLog[] = []
+        // const succ: PunchLog[] = []
         for (let index = 0; index < punchLogs.length; index++) {
             const punchLog = punchLogs[index];
 
@@ -117,7 +117,7 @@ export const autoPushToKlock = async (limit: number | null = null) => {
             const data: KlockAlarm = {
                 user: punchLog.employeeNo,
                 pic: imgBase64,
-                cameraName: punchLog.location,
+                cameraName: punchLog?.location.split('|')[0],
                 time: `${punchLog.date} ${punchLog.time}`,
                 temperature: punchLog.temp
             }
@@ -126,11 +126,12 @@ export const autoPushToKlock = async (limit: number | null = null) => {
             if (result == 'ok') {
                 console.log(index + 1);
                 punchLog.submitted = new Date()
-                succ.push(punchLog)
+                await globalThis.DB.manager.save(punchLog)
+            } else {
+                console.error('pushToKlock failed');
             }
         }
 
-        await globalThis.DB.manager.save(succ)
     } catch (error) {
         console.log(error)
         return
