@@ -60,7 +60,7 @@ const HikIsImageRequest = async (method: string, base: string, uri: string, user
 
     const accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
 
-    return axios({ method, url, data, headers: { Authorization: authorization, Accept: accept, 'Accept-Encoding': "gzip, deflate" }, responseType: 'arraybuffer' })
+    return axios({ method, url, data, headers: { Authorization: authorization, Accept: accept, 'Accept-Encoding': "gzip, deflate" }, timeout: 10000, responseType: 'arraybuffer' })
 }
 
 const getDeviceLog = async (device: any, startDate: string, endDate: string, offset: number = 0) => {
