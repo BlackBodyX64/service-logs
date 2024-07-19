@@ -252,11 +252,15 @@ const getImage = async (picPath: string) => {
         const ip = match[1];
         const path = match[2];
 
-        const response = await HikIsImageRequest('GET', `http://${ip}`, path, 'admin', 'Admin@123', null)
+        try {
+            const response = await HikIsImageRequest('GET', `http://${ip}`, path, 'admin', 'Admin@123', null)
+            let base64Image = `data:${response.headers['content-type']};base64,` + Buffer.from(response.data).toString('base64');
 
-        let base64Image = `data:${response.headers['content-type']};base64,` + Buffer.from(response.data).toString('base64');
-
-        return base64Image
+            return base64Image
+        } catch (error) {
+            console.error(error)
+            return null
+        }
     } else {
         return null
     }
