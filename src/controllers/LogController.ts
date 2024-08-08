@@ -108,7 +108,7 @@ export const autoPushToKlock = async (limit: number | null = null) => {
             //     continue
             // }
 
-            const imgBase64 = await deviceUtils.getImage(punchLog.pic)
+            const imgBase64 = 'data:image/png;base64,R0lGODlhAQABAIAAAP///wAAACwAAAAAAQABAAACAkQBADs='
             if (!imgBase64) {
                 console.log('can not get image from device');
                 continue
