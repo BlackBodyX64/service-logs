@@ -1,5 +1,5 @@
 
-import axios from 'axios'
+import axios, { AxiosResponse } from 'axios'
 import CryptoJS from 'crypto-js'
 import DateTimeUtils from '../utils/DateTimeUtils'
 import { v4 as uuidV4 } from 'uuid'
@@ -108,7 +108,7 @@ const getDeviceLog = async (device: any, startDate: string, endDate: string, off
         }
     } catch (error: any) {
         console.log(`DeviceUtils.getDeviceLog - device: ${device.serialNumber} offset: ${offset}, error: ${error}`)
-        return null    
+        return null
     }
 
     console.log(`DeviceUtils.getDeviceLog - device: ${device.serialNumber}, offset: ${offset} Success`)
@@ -209,7 +209,7 @@ const getListUpdatePunchLog = async (devices: any) => {
     try {
         for (const device of devices) {
             mapper[device.serialNumber] = []
-            const res = getDeviceLog(device, device.startDate, device.endDate)
+            const res: Promise<AxiosResponse<any, any> | null> = getDeviceLog(device, device.startDate, device.endDate)
             waitingList.push(res)
         }
 
@@ -217,7 +217,7 @@ const getListUpdatePunchLog = async (devices: any) => {
         const result = await Promise.all(waitingList)
 
         for (const re of result) {
-            console.log(JSON.stringify(re));
+            console.log(JSON.stringify(re?.status));
             // if (re?.data == undefined) {
             //     return getListUpdatePunchLog(devices)
             // }
