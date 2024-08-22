@@ -113,8 +113,6 @@ const getDeviceLog = async (device: any, startDate: string, endDate: string, off
 
     console.log(`DeviceUtils.getDeviceLog - device: ${device.serialNumber}, offset: ${offset} Success`)
 
-    console.info(JSON.stringify(res));
-
     return res
 
 }
@@ -218,10 +216,13 @@ const getListUpdatePunchLog = async (devices: any) => {
         console.log(`DeviceUtils.getListUpdatePunchLog - waiting for log retrieving . . .`)
         const result = await Promise.all(waitingList)
 
-        console.info(JSON.stringify(result));
+        // for (const re of result) {
+        //     console.info(JSON.stringify(re?.data));
+        // }
         
         console.log(`DeviceUtils.getListUpdatePunchLog - mapper: ${Object.keys(mapper).length}`)
         console.log(`DeviceUtils.getListUpdatePunchLog - responseList: ${Object.keys(responseList).length}`)
+        JSON.stringify(responseList)
     } catch (error: any) {
         console.log(`DeviceUtils.getListUpdatePunchLog - error: ${error}`)
         console.log(error.stack)
