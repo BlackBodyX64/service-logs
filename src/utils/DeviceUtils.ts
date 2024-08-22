@@ -216,12 +216,12 @@ const getListUpdatePunchLog = async (devices: any) => {
         console.log(`DeviceUtils.getListUpdatePunchLog - waiting for log retrieving . . .`)
         const result = await Promise.all(waitingList)
 
-        for (const re of result) {
-            console.log(JSON.stringify(re?.data));
-            if (re?.data == undefined) {
-                return getListUpdatePunchLog(devices)
-            }
-        }
+        // for (const re of result) {
+        //     console.log(JSON.stringify(re?.data));
+        //     if (re?.data == undefined) {
+        //         return getListUpdatePunchLog(devices)
+        //     }
+        // }
         
         console.log(`DeviceUtils.getListUpdatePunchLog - mapper: ${Object.keys(mapper).length}`)
         console.log(`DeviceUtils.getListUpdatePunchLog - responseList: ${Object.keys(responseList).length}`)
