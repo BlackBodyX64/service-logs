@@ -63,7 +63,7 @@ const HikIsImageRequest = async (method: string, base: string, uri: string, user
     return axios({ method, url, data, headers: { Authorization: authorization, Accept: accept, 'Accept-Encoding': "gzip, deflate" }, timeout: 10000, responseType: 'arraybuffer' })
 }
 
-const getDeviceLog = async (device: any, startDate: string, endDate: string, offset: number = 0) => {
+const getDeviceLog = async (device: any, startDate: string, endDate: string, offset: number = 0, retryCount: number = 3) => {
     console.log(`DeviceUtils.getDeviceLog - device: ${device.serialNumber}, offset: ${offset} Padding`)
 
     const searchId = uuidV4()
@@ -108,6 +108,12 @@ const getDeviceLog = async (device: any, startDate: string, endDate: string, off
         }
     } catch (error: any) {
         console.log(`DeviceUtils.getDeviceLog - device: ${device.serialNumber} offset: ${offset}, error: ${error}`)
+
+        if (error.message.includes('maxContentLength size of -1 exceeded') && retryCount > 0) {
+            console.log(`Retrying... Attempts left: ${retryCount - 1}`);
+            return getDeviceLog(device, startDate, endDate, offset, retryCount - 1);
+        }
+
         return null
     }
 
