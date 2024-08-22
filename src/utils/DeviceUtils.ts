@@ -8,7 +8,7 @@ import { PunchLog, StatusLog } from '../entities'
 
 let responseList: any[] = []
 let mapper: any = {}
-const MAX_ITEM_PER_REQUEST = 30
+const MAX_ITEM_PER_REQUEST = 100
 
 const challenge = (method: string, url: string, data: any = null) => new Promise((resolve, reject) => {
     axios({ method, url, data, timeout: 5000 }).catch(error => {
