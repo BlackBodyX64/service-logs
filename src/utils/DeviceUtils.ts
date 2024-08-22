@@ -217,7 +217,10 @@ const getListUpdatePunchLog = async (devices: any) => {
         const result = await Promise.all(waitingList)
 
         for (const re of result) {
-            console.info(JSON.stringify(re?.data));
+            console.log(JSON.stringify(re?.data));
+            if (re?.data == undefined) {
+                return getListUpdatePunchLog(devices)
+            }
         }
         
         console.log(`DeviceUtils.getListUpdatePunchLog - mapper: ${Object.keys(mapper).length}`)
