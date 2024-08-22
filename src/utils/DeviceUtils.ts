@@ -217,8 +217,7 @@ const getListUpdatePunchLog = async (devices: any) => {
         const result = await Promise.all(waitingList)
 
         for (const re of result) {
-            console.log(JSON.stringify(re?.status));
-            console.log(JSON.stringify(re?.statusText));
+            console.log(JSON.stringify(re));
             // if (re?.data == undefined) {
             //     return getListUpdatePunchLog(devices)
             // }
