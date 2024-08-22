@@ -108,11 +108,7 @@ const getDeviceLog = async (device: any, startDate: string, endDate: string, off
         }
     } catch (error: any) {
         console.log(`DeviceUtils.getDeviceLog - device: ${device.serialNumber} offset: ${offset}, error: ${error}`)
-        if (error == '') {
-            res = await HikIsApiRequest('POST', `http://${device.ip}`, uri, device.username, device.password, data)
-        } else {
-            return null
-        }
+        return null    
     }
 
     console.log(`DeviceUtils.getDeviceLog - device: ${device.serialNumber}, offset: ${offset} Success`)
@@ -221,10 +217,11 @@ const getListUpdatePunchLog = async (devices: any) => {
         const result = await Promise.all(waitingList)
 
         for (const re of result) {
-            console.log(JSON.stringify(re?.data));
-            if (re?.data == undefined) {
-                return getListUpdatePunchLog(devices)
-            }
+            console.log(JSON.stringify(re?.status));
+            console.log(JSON.stringify(re?.statusText));
+            // if (re?.data == undefined) {
+            //     return getListUpdatePunchLog(devices)
+            // }
         }
 
         console.log(`DeviceUtils.getListUpdatePunchLog - mapper: ${Object.keys(mapper).length}`)
