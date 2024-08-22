@@ -9,5 +9,6 @@ const router = Router()
 
 router.post('/sync-log', LogController.syncUpdateLog)
 router.post('/sync-force', LogController.syncForce)
+router.post('/view-log', LogController.viewLogReq)
 
 export default router

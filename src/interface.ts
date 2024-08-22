@@ -12,4 +12,5 @@ export enum ResponseStatus {
 export interface BodyResponse {
     status: ResponseStatus
     msg?: string
+    data?: any
 }
