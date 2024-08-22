@@ -11,7 +11,7 @@ let mapper: any = {}
 const MAX_ITEM_PER_REQUEST = 30
 
 const challenge = (method: string, url: string, data: any = null) => new Promise((resolve, reject) => {
-    axios({ method, url, data }).catch(error => {
+    axios({ method, url, data, timeout: 5000 }).catch(error => {
         if (error && error.response && error.response.status === 401) {
             const authDetails = error.response.headers['www-authenticate'].split(', ').map((v: any) => {
                 const splitIndex = v.indexOf('=')
@@ -40,7 +40,7 @@ const HikIsApiRequest = async (method: string, base: string, uri: string, userna
         `nonce="${nonce}", uri="${uri}", response="${response}", ` +
         `qop="${qop}", nc=${nonceCount}, cnonce="${cNonce}"`
 
-    return axios({ method, url, data, headers: { Authorization: authorization } })
+    return axios({ method, url, data, headers: { Authorization: authorization }, timeout: 10000 })
 }
 
 const HikIsImageRequest = async (method: string, base: string, uri: string, username: string, password: string, data: any = null) => {
@@ -60,7 +60,7 @@ const HikIsImageRequest = async (method: string, base: string, uri: string, user
 
     const accept = 'text/html,application/xhtml+xml,application/xml;q=0.9,image/avif,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7'
 
-    return axios({ method, url, data, headers: { Authorization: authorization, Accept: accept, 'Accept-Encoding': "gzip, deflate" }, responseType: 'arraybuffer' })
+    return axios({ method, url, data, headers: { Authorization: authorization, Accept: accept, 'Accept-Encoding': "gzip, deflate" }, timeout: 10000, responseType: 'arraybuffer' })
 }
 
 const getDeviceLog = async (device: any, startDate: string, endDate: string, offset: number = 0) => {
