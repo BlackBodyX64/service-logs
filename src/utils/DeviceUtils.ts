@@ -98,6 +98,8 @@ const getDeviceLog = async (device: any, startDate: string, endDate: string, off
                 )
                 while (total > listOffset) {
                     const res2 = await getDeviceLog(device, startDate, endDate, listOffset)
+                    console.log(res2, res2);
+                    
                     listOffset += MAX_ITEM_PER_REQUEST
                     responseList.push(res2)
                 }
